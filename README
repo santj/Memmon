@@ -1,0 +1,12 @@
+Memmon
+
+Memmon is a utility used to detect possible memory leaks in system processes.
+
+Memmon builds a table of memory usage by process. Repeated calls to Memmon 
+from cron update the table with a memory increase usage count. 
+If the memory used continues to increase over time the process is flagged 
+as one that may have a memory leak. This monitor works on the assumption that 
+processes will use a stable amount of memory over time.
+
+A filter is provided to eliminate noise from applications known to vary widely 
+in their memory usage.
