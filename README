@@ -10,3 +10,6 @@ processes will use a stable amount of memory over time.
 
 A filter is provided to eliminate noise from applications known to vary widely 
 in their memory usage.
+
+The License File contains the GNU GPL, which applies to all files in this 
+repository.
