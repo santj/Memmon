@@ -1,0 +1,4 @@
+# memfilt 09/07/08
+# This is the filter file for the memmon monitor.
+# Processes listed in this file will be ignored by memmon,
+# that is they will not be flagged as a process with a possible memory leak.
