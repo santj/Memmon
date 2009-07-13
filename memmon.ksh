@@ -1,5 +1,5 @@
 #!/bin/ksh
-#  memmon  09/06/24
+#  memmon.ksh  09/06/24
 #
 #  Copyright (c) 7/2/2009
 #  All rights reserved
@@ -17,11 +17,14 @@
 #
 #  OPTIONS:
 #
-#  -c Override default category (default - 'memmon')
+#  -c Override default category (default - 'memmon.ksh')
 #  -f Override default filter file (default - ./memfilt)
 #  -p Override default priority (default - 3)
 #  -g Override default growth count (default - 10)
 #
+
+export LC_TIME="C"  #set the time local so getdate works correctly
+
 ME=`basename $0`
 USAGE="Usage: $ME [-c category] [-g growth count] [-p priority]"
  
@@ -101,7 +104,7 @@ fi
 ####################################################################
 if [ ! -s ${PS_DATA} ]
 then
-	Boottime=`getdate "\`who -r | awk '{print $4, $5, $6}'\`"`
+	Boottime=`getdate "\`who -r | awk '{print $3, $4, $5}'\` \`date +%Z\`"`
 	Currenttime=`getdate now`
 #############################################################################
 # If Boottime is greater than Currenttime, assume the system was last booted
@@ -110,7 +113,7 @@ then
      if [ $Boottime -gt $Currenttime ]
      then
         LASTYEAR="`date +%Z` `expr \`date +%Y\` - 1`"
-        Boottime=`getdate "\`who -r | awk '{print $4, $5, $6}'\` $LASTYEAR"`
+        Boottime=`getdate "\`who -r | awk '{print $3, $4, $5}'\` $LASTYEAR"`
      fi
 	Uptime=`expr $Currenttime - $Boottime`
 	if [ $Uptime -ge 600 ]
@@ -183,15 +186,16 @@ do
 			b_growth=`expr $b_growth + 1`
 			if [ "${b_growth}" -ge "${Growth_cnt}" ]
 			then 
-				v_ms -p $Priority -c $Category -m "process <${c_pid} ${c_proc}> has grown ${b_growth} times, from ${b_isize} pages to ${c_size} pages, this process has a possible memory leak"
+				#v_ms -p $Priority -c $Category -m "process <${c_pid} ${c_proc}> has grown ${b_growth} times, from ${b_isize} pages to ${c_size} pages, this process has a possible memory leak"
+				echo "-p $Priority -c $Category -m \"process <${c_pid} ${c_proc}> has grown ${b_growth} times, from ${b_isize} pages to ${c_size} pages, this process has a possible memory leak\""
 			fi
 		elif [ ${c_size} -lt ${b_size} ]
 		then
 			b_growth=0
 		fi
-		echo "${c_pid}\t${c_proc}\t${c_size}\t${b_isize}\t${b_growth}">> ${PS_DATA}2
+		echo -e "${c_pid}\t${c_proc}\t${c_size}\t${b_isize}\t${b_growth}">> ${PS_DATA}2
 	else
-		echo "${c_pid}\t${c_proc}\t${c_size}\t${c_isize}\t0">>${PS_DATA}2
+		echo -e "${c_pid}\t${c_proc}\t${c_size}\t${c_isize}\t0">>${PS_DATA}2
 	fi
 done < ${CR_DATA}1 3< ${PS_DATA}1
 cp ${PS_DATA}2 ${PS_DATA}
