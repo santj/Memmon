@@ -1,4 +1,4 @@
-#  Make procedure for memmon
+#  Make procedure for memmon.ksh
 #  @(#) makefile 6.1 09/07/06
 #
 
@@ -10,8 +10,8 @@ INSTDIR=/usr/local/bin
 #  Memmon filter file
 MEMFILT = memfilt
 
-#  memmon script
-V_MEMMON  = memmon
+#  memmon.ksh script
+V_MEMMON  = memmon.ksh
 
 #  Target Dependencies
 all: getdate $(V_MEMMON) $(MEMFILT)
