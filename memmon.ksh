@@ -136,8 +136,8 @@ sort -n -o ${CR_DATA}1 -k 1 -k 1,1 ${CR_DATA}
 >${PS_DATA}2
 sc_pid=0
 b_pid=0
-typeset -L10 c_proc=
-typeset -L10 b_proc=
+typeset -L20 c_proc=
+typeset -L20 b_proc=
 while read c_pid c_proc c_size c_isize c_growth  # read current PS info
 do
 
