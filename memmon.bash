@@ -138,8 +138,9 @@ sc_pid=0
 b_pid=0
 #typeset -L10 c_proc=
 #typeset -L10 b_proc=
-declare -i c_proc=0
-declare -i b_proc=0
+#declare -i c_proc=0
+#declare -i b_proc=0
+
 while read c_pid c_proc c_size c_isize c_growth  # read current PS info
 do
 
@@ -196,10 +197,10 @@ do
 			b_growth=0
 		fi
 		#echo -e "${c_pid}\t${c_proc}\t${c_size}\t${b_isize}\t${b_growth}">> ${PS_DATA}2
-		printf "%s\t%-10s\t%d\t%d\t%d\t\n" ${c_pid} ${c_proc} ${c_size} ${b_isize} ${b_growth}>> ${PS_DATA}2
+		printf "%s\t%-20s\t%d\t%d\t%d\n" ${c_pid} ${c_proc} ${c_size} ${b_isize} ${b_growth}>> ${PS_DATA}2
 	else
 		#echo -e "${c_pid}\t${c_proc}\t${c_size}\t${c_isize}\t0">>${PS_DATA}2
-		printf "%s\t%-10s\t%d\t%d\t%d\t0\n" ${c_pid} ${c_proc} ${c_size} ${c_isize} >>${PS_DATA}2
+		printf "%s\t%-20s\t%d\t%d\t0\n" ${c_pid} ${c_proc} ${c_size} ${c_isize} >>${PS_DATA}2
 	fi
 done < ${CR_DATA}1 3< ${PS_DATA}1
 cp ${PS_DATA}2 ${PS_DATA}
