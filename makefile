@@ -5,13 +5,14 @@
 CFLAGS=
 
 # Install Directory
-INSTDIR=/usr/local/bin
+#INSTDIR=/usr/local/bin
+INSTDIR=~/bin
 
 #  Memmon filter file
 MEMFILT = memfilt
 
 #  memmon.ksh script
-V_MEMMON  = memmon.ksh
+V_MEMMON  = memmon.ksh memmon.bash
 
 #  Target Dependencies
 all: getdate $(V_MEMMON) $(MEMFILT)
