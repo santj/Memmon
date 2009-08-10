@@ -173,6 +173,7 @@ do
 		read -u3 b_pid b_proc b_size b_isize b_growth
 		if [ $? -gt 0 ] #end of file
 		then
+			b_pid=0
 			break
 		fi
 		if [ "${b_pid}" = "PID" ]
