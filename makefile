@@ -19,7 +19,7 @@ all: getdate $(V_MEMMON) $(MEMFILT)
 
 install: getdate $(V_MEMMON) $(MEMFILT)
 	@for FILE in getdate ${V_MEMMON} $(MEMFILT); do \
-		cp $${FILE} ${INSTDIR}; \
+		cp $${FILE} ${INSTDIR}/${FILE}; \
 		chmod 755 ${INSTDIR}/$${FILE}; \
 	done
 
@@ -43,8 +43,6 @@ $(OBJS): $(SRC)
 $(SRC): parse.c getdate.c
 
 $(MEMFILT): 
-
-$(V_MEMMON):
 
 .c.o:
 	$(CC) $(CFLAGS) -c $<
