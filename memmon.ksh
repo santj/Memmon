@@ -23,10 +23,10 @@
 #  -g Override default growth count (default - 10)
 #
 
-export LC_TIME="C"  #set the time local so getdate works correctly
+export LC_TIME="C"  #set the time locale so getdate works correctly
 
 ME=`basename $0`
-USAGE="Usage: $ME [-c category] [-g growth count] [-p priority]"
+USAGE="Usage: $ME [-c category] [-f filter] [-g growth count] [-p priority]"
  
 ####################################################################
 ### This func is used to issue an error and quit; $1 is an err message
@@ -94,6 +94,10 @@ if [ -z "$Category" ]; then
   err_quit "Must specify category when using -c option"
 fi
  
+if [ -z "$Filter_file" ]; then
+  err_quit "Must specify filter file name when using -f option"
+fi
+ 
 if [ -z "$Growth_cnt" ]; then
   err_quit "Must specify a growth count when using -g option"
 fi
@@ -157,7 +161,6 @@ do
 	then
 		#skip if the proc is in the filter file
 		grep ${c_proc} ${Filter_file} 2>&1 > /dev/null
-		#grep ${c_proc} ${filter_file}
 		if [ $? -eq 0 ]
 		then
 			continue
@@ -186,7 +189,6 @@ do
 			b_growth=`expr $b_growth + 1`
 			if [ "${b_growth}" -ge "${Growth_cnt}" ]
 			then 
-				#v_ms -p $Priority -c $Category -m "process <${c_pid} ${c_proc}> has grown ${b_growth} times, from ${b_isize} pages to ${c_size} pages, this process has a possible memory leak"
 				echo "-p $Priority -c $Category -m \"process <${c_pid} ${c_proc}> has grown ${b_growth} times, from ${b_isize} pages to ${c_size} pages, this process has a possible memory leak\""
 			fi
 		elif [ ${c_size} -lt ${b_size} ]
