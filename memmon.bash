@@ -1,5 +1,5 @@
 #!/bin/bash
-#  memmon.ksh  09/06/24
+#  memmon.bash  09/06/24
 #
 #  Copyright (c) 7/2/2009
 #  All rights reserved
@@ -17,16 +17,16 @@
 #
 #  OPTIONS:
 #
-#  -c Override default category (default - 'memmon.ksh')
+#  -c Override default category (default - 'memmon.bash')
 #  -f Override default filter file (default - ./memfilt)
 #  -p Override default priority (default - 3)
 #  -g Override default growth count (default - 10)
 #
 
-export LC_TIME="C"  #set the time local so getdate works correctly
+export LC_TIME="C"  #set the time locale so getdate works correctly
 
 ME=`basename $0`
-USAGE="Usage: $ME [-c category] [-g growth count] [-p priority]"
+USAGE="Usage: $ME [-c category] [-f filter] [-g growth count] [-p priority]"
  
 ####################################################################
 ### This func is used to issue an error and quit; $1 is an err message
@@ -93,6 +93,11 @@ fi
 if [ -z "$Category" ]; then
   err_quit "Must specify category when using -c option"
 fi
+
+if [ -z "$Filter_file" ]; then
+  err_quit "Must specify category when using -f option"
+fi
+ 
  
 if [ -z "$Growth_cnt" ]; then
   err_quit "Must specify a growth count when using -g option"
@@ -136,10 +141,6 @@ sort -n -o ${CR_DATA}1 -k 1 -k 1,1 ${CR_DATA}
 >${PS_DATA}2
 sc_pid=0
 b_pid=0
-#typeset -L10 c_proc=
-#typeset -L10 b_proc=
-#declare -i c_proc=0
-#declare -i b_proc=0
 
 while read c_pid c_proc c_size c_isize c_growth  # read current PS info
 do
@@ -160,7 +161,6 @@ do
 	then
 		#skip if the proc is in the filter file
 		grep ${c_proc} ${Filter_file} 2>&1 > /dev/null
-		#grep ${c_proc} ${filter_file}
 		if [ $? -eq 0 ]
 		then
 			continue
@@ -190,17 +190,14 @@ do
 			b_growth=`expr $b_growth + 1`
 			if [ "${b_growth}" -ge "${Growth_cnt}" ]
 			then 
-				#v_ms -p $Priority -c $Category -m "process <${c_pid} ${c_proc}> has grown ${b_growth} times, from ${b_isize} pages to ${c_size} pages, this process has a possible memory leak"
 				echo "-p $Priority -c $Category -m \"process <${c_pid} ${c_proc}> has grown ${b_growth} times, from ${b_isize} pages to ${c_size} pages, this process has a possible memory leak\""
 			fi
 		elif [ ${c_size} -lt ${b_size} ]
 		then
 			b_growth=0
 		fi
-		#echo -e "${c_pid}\t${c_proc}\t${c_size}\t${b_isize}\t${b_growth}">> ${PS_DATA}2
 		printf "%s\t%-20s\t%d\t%d\t%d\n" ${c_pid} ${c_proc} ${c_size} ${b_isize} ${b_growth}>> ${PS_DATA}2
 	else
-		#echo -e "${c_pid}\t${c_proc}\t${c_size}\t${c_isize}\t0">>${PS_DATA}2
 		printf "%s\t%-20s\t%d\t%d\t0\n" ${c_pid} ${c_proc} ${c_size} ${c_isize} >>${PS_DATA}2
 	fi
 done < ${CR_DATA}1 3< ${PS_DATA}1
